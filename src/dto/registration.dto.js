@@ -28,7 +28,7 @@ const createRegistrationSchema = Joi.object({
       "any.only": "Le statut doit être 'en attente', 'confirmée' ou 'annulée'",
     }),
 
-  registrationDate: Joi.date().default(() => new Date(), "date par défaut"),
+  registrationDate: Joi.date(),
 
   paymentStatus: Joi.string()
     .valid("non payé", "payé")

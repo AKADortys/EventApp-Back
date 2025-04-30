@@ -13,18 +13,18 @@ module.exports = {
       const searchQuery = search
         ? {
             $or: [
-              { event: { $regex: searchQuery, $options: "i" } },
-              { user: { $regex: searchQuery, $options: "i" } },
+              { status: { $regex: search, $options: "i" } },
+              { paymentStatus: { $regex: search, $options: "i" } },
             ],
           }
         : {};
       // Requête avec filtre + pagination
-      const [registration, total] = await Promise.all([
+      const [registrations, total] = await Promise.all([
         Registration.find(searchQuery)
           .skip(skip)
           .limit(limit)
-          .populate("organizer", "name lastName mail")
-          .populate("participants", "name lastName mail"),
+          .populate("event", "title date location sportType")
+          .populate("user", "name lastName mail"),
         Registration.countDocuments(searchQuery),
       ]);
       return {
@@ -44,8 +44,8 @@ module.exports = {
   getRegistration: async (id) => {
     try {
       const registration = await Registration.findById(id)
-        .populate("organizer", "name lastName mail")
-        .populate("participants", "name lastName mail");
+        .populate("event", "title date location sportType")
+        .populate("user", "name lastName mail");
 
       return registration || null;
     } catch (error) {

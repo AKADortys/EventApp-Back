@@ -13,6 +13,7 @@ app.use(express.json());
 app.use("/users", require("./src/routes/user.route"));
 app.use("/events", require("./src/routes/event.route"));
 app.use("/auth", require("./src/routes/auth.route"));
+app.use("/registrations", require("./src/routes/registration.route"));
 
 app.listen(process.env.APP_PORT, () => {
   console.log(`app listening on port ${process.env.APP_PORT}`);
