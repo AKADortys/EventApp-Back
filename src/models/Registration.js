@@ -30,6 +30,25 @@ const registrationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+registrationSchema.pre("findOneAndDelete", async function (next) {
+  try {
+    const registration = await this.model.findOne(this.getFilter());
+    if (!registration) return next();
+    const eventId = registration.event;
+    const userId = registration.user;
+    const Event = require("./Event");
+
+    await Event.findByIdAndUpdate(eventId, { $pull: { participants: userId } });
+    next();
+  } catch (error) {
+    console.error(
+      "Erreur dans pre('findOneAndDelete') de Registration :",
+      error
+    );
+    next(error);
+  }
+});
+
 const Registration = mongoose.model("Registration", registrationSchema);
 
 module.exports = Registration;

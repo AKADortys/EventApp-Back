@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+//gestion de la suppression
 userSchema.pre("findOneAndDelete", async function (next) {
   try {
     const user = await this.model.findOne(this.getFilter());
@@ -90,13 +90,18 @@ userSchema.pre("findOneAndDelete", async function (next) {
       })
     );
 
+    await Promise.all(
+      registrations.map(async (registration) => {
+        await Registration.findByIdAndDelete(registration._id);
+      })
+    );
+
     next();
   } catch (err) {
     console.error("Erreur dans pre('findOneAndDelete') de User :", err);
     next(err);
   }
 });
-
 // Hashage du mot de passe avant enregistrement
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
@@ -108,6 +113,7 @@ userSchema.pre("save", async function (next) {
     next(error);
   }
 });
+//gestion de la mise à jour mdp
 userSchema.pre("findOneAndUpdate", async function (next) {
   const update = this.getUpdate();
   if (update.password) {

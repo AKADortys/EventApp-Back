@@ -63,6 +63,31 @@ const eventSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+eventSchema.pre("findOneAndDelete", async function (next) {
+  try {
+    // Trouver l'événement qui est sur le point d'être supprimé
+    const event = await this.model.findOne(this.getFilter());
+    if (!event) return next();
+
+    const eventId = event._id;
+    const Registration = require("./Registration");
+
+    // Supprimer les inscriptions liées à l'événement
+    const registrations = await Registration.find({ event: eventId });
+
+    await Promise.all(
+      registrations.map((registration) =>
+        Registration.findByIdAndDelete(registration._id)
+      )
+    );
+
+    next();
+  } catch (error) {
+    console.error("Erreur dans pre('findOneAndDelete') de Event :", error);
+    next(error);
+  }
+});
+
 const Event = mongoose.model("Event", eventSchema);
 
 module.exports = Event;
