@@ -28,7 +28,7 @@ module.exports = {
         Registration.countDocuments(searchQuery),
       ]);
       return {
-        registration,
+        registrations,
         total,
         totalPages: Math.ceil(total / limit),
         page,
@@ -51,6 +51,40 @@ module.exports = {
     } catch (error) {
       console.error("Erreur registration.services getRegistration()\n" + error);
       throw new Error("Erreur lors de la récupération de l'event");
+    }
+  },
+
+  create: async (data) => {
+    try {
+      const registration = new Registration(data);
+      await registration.save();
+      return registration;
+    } catch (error) {
+      console.error("Erreur registration.service create()\n" + error);
+      throw new Error("Erreur lors de la création de l'inscription");
+    }
+  },
+
+  update: async (id, data) => {
+    try {
+      const registration = await Registration.findByIdAndUpdate(id, data, {
+        new: true,
+        runValidators: true,
+      });
+      return registration ? registration.toObject() : null;
+    } catch (error) {
+      console.error("Erreur registration.service update()\n" + error);
+      throw new Error("Erreur lors de la mise à jour de l'inscription");
+    }
+  },
+
+  delete: async (id) => {
+    try {
+      const registration = await Registration.findByIdAndDelete(id);
+      return registration || null;
+    } catch (error) {
+      console.log("Erreur registration.service delete()\n" + error);
+      throw new Error("Erreur lors de la suppresion de l'inscription");
     }
   },
 };
