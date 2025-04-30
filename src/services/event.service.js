@@ -102,4 +102,26 @@ module.exports = {
       throw new Error("Erreur lors de la suppresion de l'event");
     }
   },
+
+  addParticipant: async (eventId, userId) => {
+    try {
+      await Event.findByIdAndUpdate(eventId, {
+        $addToSet: { participants: userId },
+      });
+    } catch (error) {
+      console.error("Erreur dans addParticipant\n" + error);
+      throw error;
+    }
+  },
+
+  removeParticipant: async (eventId, userId) => {
+    try {
+      await Event.findByIdAndUpdate(eventId, {
+        $pull: { participants: userId },
+      });
+    } catch (error) {
+      console.error("Erreur dans removeParticipant\n" + error);
+      throw error;
+    }
+  },
 };

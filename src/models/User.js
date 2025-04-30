@@ -75,7 +75,7 @@ userSchema.pre("findOneAndDelete", async function (next) {
     // Supprimer les événements organisés par cet utilisateur
     const events = await Event.find({ organisateur: userId });
     await Promise.all(
-      events.map((event) => Event.findByIdAndDelete(event._id))
+      events.map(async (event) => await Event.findByIdAndDelete(event._id))
     );
 
     // Récupérer toutes les inscriptions de cet utilisateur

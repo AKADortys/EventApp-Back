@@ -1,5 +1,6 @@
 const Registration = require("../models/Registration");
 const validator = require("validator");
+const eventService = require("./event.service");
 
 module.exports = {
   getRegistrations: async (page, limit, search) => {
@@ -73,6 +74,7 @@ module.exports = {
   create: async (data) => {
     try {
       const registration = new Registration(data);
+      await eventService.addParticipant(data.event, data.user);
       await registration.save();
       return registration;
     } catch (error) {
