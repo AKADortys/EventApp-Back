@@ -1,5 +1,4 @@
 const User = require("../models/User");
-
 module.exports = {
   // Récupérer tous les utilisateurs
   getUsers: async (page, limit, searchTerm = "") => {
@@ -85,15 +84,13 @@ module.exports = {
       throw error;
     }
   },
-  // Supprimer un utilisateur
   deleteUser: async (id) => {
     try {
-      const user = await User.findById(id);
-      if (!user) return null;
-
-      await User.deleteOne({ _id: id });
+      const user = await User.findByIdAndDelete(id);
+      if (!user) return false;
       return true;
     } catch (error) {
+      console.error("Erreur lors de la suppression de l'utilisateur :", error);
       throw new Error("Erreur lors de la suppression de l'utilisateur");
     }
   },

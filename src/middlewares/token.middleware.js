@@ -56,7 +56,7 @@ const refreshTokenFunction = async (refreshToken) => {
 
     // Génération d'un nouvel access token avec les infos de l'utilisateur
     const newAccessToken = jwt.sign(
-      { id: decoded.id, role: decoded.role }, // Données du user à inclure
+      { id: decoded.id, role: decoded.role }, // Données user
       jwtConfig.secret,
       { expiresIn: "1h" }
     );

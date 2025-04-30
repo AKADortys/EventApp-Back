@@ -4,6 +4,7 @@ const eventService = require("../services/event.service");
 const { createEventSchema, updateEventSchema } = require("../dto/event.dto");
 
 module.exports = {
+  //renvoie tout les events avec filter + pagination
   getEvents: async (req, res) => {
     try {
       const search = req.query.search || "";
@@ -22,7 +23,7 @@ module.exports = {
       res.status(500).json({ message: error.message });
     }
   },
-
+  //renvoie un event par son id
   getEvent: async (req, res) => {
     try {
       const id = req.params.id;
@@ -40,7 +41,7 @@ module.exports = {
       res.status(500).json({ message: error.message });
     }
   },
-
+  //création event
   create: async (req, res) => {
     try {
       const { error, value } = createEventSchema.validate(req.body, {
@@ -62,7 +63,7 @@ module.exports = {
       res.status(500).json({ message: error.message });
     }
   },
-
+  //MàJ event
   update: async (req, res) => {
     try {
       const id = req.params.id;
@@ -94,7 +95,7 @@ module.exports = {
       res.status(500).json({ message: error.message });
     }
   },
-
+  //suppr envent
   delete: async (req, res) => {
     try {
       const id = req.params.id;

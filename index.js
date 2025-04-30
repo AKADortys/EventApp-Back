@@ -2,14 +2,15 @@ const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-require("dotenv").config();
+require("dotenv").config(); //importation des variables env
 const connect = require("./src/config/database");
 
-connect();
-app.use(cookieParser());
-app.use(cors());
-app.use(express.json());
+connect(); //connection à la bdd
+app.use(cookieParser()); //utilisation de la config de cookie parser poour les cookies
+app.use(cors()); //les domaines autorisé à définir
+app.use(express.json()); //middleware pour les réponse et requêtes
 
+//routes
 app.use("/users", require("./src/routes/user.route"));
 app.use("/events", require("./src/routes/event.route"));
 app.use("/auth", require("./src/routes/auth.route"));

@@ -55,6 +55,20 @@ module.exports = {
     }
   },
 
+  getEventsByOrga: async (idOrga) => {
+    try {
+      const event = await Event.find({ organizer: idOrga })
+        .populate("organizer", "name lastName mail")
+        .populate("participants", "name lastName mail");
+      return event || null;
+    } catch (error) {
+      console.error("Erreur event.service getEventsByOrga()\n" + error);
+      throw new Error(
+        "Erreur lors de la récupération des events de l'utilisateur"
+      );
+    }
+  },
+
   create: async (data) => {
     try {
       const event = new Event(data);

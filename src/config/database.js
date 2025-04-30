@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 
+//gestion de la connection à la bdd
 const connect = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
-      authSource: "admin", // Vérifie si nécessaire
+      authSource: "admin",
     });
     console.log("✅ Connected to MongoDB");
   } catch (error) {

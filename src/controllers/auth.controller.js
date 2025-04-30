@@ -4,6 +4,7 @@ const validator = require("validator");
 const authService = require("../services/auth.service");
 
 const authController = {
+  //gestion requête connection utilisateur
   login: async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -41,7 +42,7 @@ const authController = {
           expiresIn: "7d",
         }
       );
-
+      //inserer les token dans deux cookies
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
@@ -58,12 +59,13 @@ const authController = {
         path: "/",
       });
 
-      return res.json({ message: "Connexion réussie", user });
+      return res.status(200).json({ message: "Connexion réussie", user });
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
       return res.status(500).json({ message: error.message });
     }
   },
+  //gestion requête déconnection
   logout: async (req, res) => {
     // Suppression des cookies
     res.clearCookie("refreshToken", {

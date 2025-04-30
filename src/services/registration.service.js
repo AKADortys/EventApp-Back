@@ -54,6 +54,22 @@ module.exports = {
     }
   },
 
+  getRegistrationByUser: async (id) => {
+    try {
+      const registration = await Registration.find({ user: id })
+        .populate("event", "title date location sportType")
+        .populate("user", "name lastName mail");
+      return registration || null;
+    } catch (error) {
+      console.error(
+        "Erreur registration.service getregistrationByUser()\n" + error
+      );
+      throw new Error(
+        "Erreur lors de la récupération des inscriptions de l'utilisateur"
+      );
+    }
+  },
+
   create: async (data) => {
     try {
       const registration = new Registration(data);

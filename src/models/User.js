@@ -62,6 +62,41 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.pre("findOneAndDelete", async function (next) {
+  try {
+    const user = await this.model.findOne(this.getFilter());
+    if (!user) return next();
+
+    const userId = user._id;
+    const Event = require("./Event");
+    const Registration = require("./Registration");
+
+    // Supprimer les événements organisés par cet utilisateur
+    const events = await Event.find({ organisateur: userId });
+    await Promise.all(
+      events.map((event) => Event.findByIdAndDelete(event._id))
+    );
+
+    // Récupérer toutes les inscriptions de cet utilisateur
+    const registrations = await Registration.find({ user: userId });
+
+    // Pour chaque inscription, retirer l'utilisateur du champ participants de l'event
+    await Promise.all(
+      registrations.map(async (registration) => {
+        await Event.findByIdAndUpdate(registration.event, {
+          $pull: { participants: userId },
+        });
+      })
+    );
+
+    next();
+  } catch (err) {
+    console.error("Erreur dans pre('findOneAndDelete') de User :", err);
+    next(err);
+  }
+});
+
 // Hashage du mot de passe avant enregistrement
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
