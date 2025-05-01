@@ -22,10 +22,10 @@ Ce fichier est le point d'entrée principal de l'application Node.js utilisant l
 
 **Routes :**
 
-* `app.use("/users", require("./src/routes/user.route"))`: Monte le routeur défini dans `./src/routes/user.route` sous le préfixe `/users`. Toutes les routes définies dans ce fichier seront accessibles via des URLs commençant par `/users`. Ce routeur gère probablement les opérations liées aux utilisateurs (création, lecture, mise à jour, suppression).
-* `app.use("/events", require("./src/routes/event.route"))`: Monte le routeur défini dans `./src/routes/event.route` sous le préfixe `/events`. Ce routeur gère probablement les opérations liées aux événements.
-* `app.use("/auth", require("./src/routes/auth.route"))`: Monte le routeur défini dans `./src/routes/auth.route` sous le préfixe `/auth`. Ce routeur gère probablement les opérations d'authentification (connexion, inscription).
-* `app.use("/registrations", require("./src/routes/registration.route"))`: Monte le routeur défini dans `./src/routes/registration.route` sous le préfixe `/registrations`. Ce routeur gère probablement les opérations liées aux inscriptions à des événements.
+* `app.use("/users", require("./src/routes/user.route"))`: Monte le routeur défini dans `./src/routes/user.route` sous le préfixe `/users`. Toutes les routes définies dans ce fichier seront accessibles via des URLs commençant par `/users`. Ce routeur gère   les opérations liées aux utilisateurs (création, lecture, mise à jour, suppression).
+* `app.use("/events", require("./src/routes/event.route"))`: Monte le routeur défini dans `./src/routes/event.route` sous le préfixe `/events`. Ce routeur gère   les opérations liées aux événements.
+* `app.use("/auth", require("./src/routes/auth.route"))`: Monte le routeur défini dans `./src/routes/auth.route` sous le préfixe `/auth`. Ce routeur gère   les opérations d'authentification (connexion, inscription).
+* `app.use("/registrations", require("./src/routes/registration.route"))`: Monte le routeur défini dans `./src/routes/registration.route` sous le préfixe `/registrations`. Ce routeur gère   les opérations liées aux inscriptions à des événements.
 
 **Démarrage du serveur :**
 
