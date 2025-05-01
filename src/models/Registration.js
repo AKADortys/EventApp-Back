@@ -17,10 +17,6 @@ const registrationSchema = new mongoose.Schema(
       enum: ["en attente", "confirmée", "annulée"],
       default: "en attente",
     },
-    registrationDate: {
-      type: Date,
-      default: Date.now,
-    },
     paymentStatus: {
       type: String,
       enum: ["non payé", "payé"],
@@ -29,6 +25,8 @@ const registrationSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+registrationSchema.index({ event: 1, user: 1 }, { unique: true });
 
 registrationSchema.pre("findOneAndDelete", async function (next) {
   try {

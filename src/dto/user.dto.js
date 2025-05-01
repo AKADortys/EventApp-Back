@@ -48,6 +48,9 @@ const userSchema = Joi.object({
         "Le mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule et un chiffre.",
       "any.required": "Le mot de passe est requis.",
     }),
+  role: Joi.string().valid("admin", "sportif", "organisateur").messages({
+    "any.only": "Le rôle doit être 'admin', 'sportif' ou 'organisateur'.",
+  }),
 });
 const updateUserSchema = Joi.object({
   name: Joi.string()
@@ -92,6 +95,9 @@ const updateUserSchema = Joi.object({
       "string.pattern.base":
         "Le mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule et un chiffre.",
     }),
+  role: Joi.string().valid("admin", "sportif", "organisateur").messages({
+    "any.only": "Le rôle doit être 'admin', 'sportif' ou 'organisateur'.",
+  }),
 })
   .min(1)
   .messages({

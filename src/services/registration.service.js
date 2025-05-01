@@ -74,12 +74,15 @@ module.exports = {
   create: async (data) => {
     try {
       const registration = new Registration(data);
-      await eventService.addParticipant(data.event, data.user);
+      const exist = await eventService.addParticipant(data.event, data.user);
+      if (!exist) throw new Error("Vous êtes déjà inscrit à cet événement.");
       await registration.save();
       return registration;
     } catch (error) {
-      console.error("Erreur registration.service create()\n" + error);
-      throw new Error("Erreur lors de la création de l'inscription");
+      if (error.code === 11000) {
+        throw new Error("Vous êtes déjà inscrit à cet événement.");
+      }
+      throw new Error(error.message);
     }
   },
 
@@ -103,6 +106,22 @@ module.exports = {
     } catch (error) {
       console.log("Erreur registration.service delete()\n" + error);
       throw new Error("Erreur lors de la suppresion de l'inscription");
+    }
+  },
+
+  checkExist: async (userId, eventId) => {
+    try {
+      const registration = await Registration.findOne({
+        event: eventId,
+        user: userId,
+      });
+      if (registration) throw new Error("Vous êtes déjà inscrit !");
+      return true;
+    } catch (error) {
+      console.error("Erreur registration.service checkExist()\n" + error);
+      throw new Error(
+        "Erreur lors de la vérification de l'existance de l'inscription "
+      );
     }
   },
 };

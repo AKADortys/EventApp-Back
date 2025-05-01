@@ -28,8 +28,6 @@ const createRegistrationSchema = Joi.object({
       "any.only": "Le statut doit être 'en attente', 'confirmée' ou 'annulée'",
     }),
 
-  registrationDate: Joi.date(),
-
   paymentStatus: Joi.string()
     .valid("non payé", "payé")
     .default("non payé")
@@ -51,8 +49,6 @@ const updateRegistrationSchema = Joi.object({
   status: Joi.string().valid("en attente", "confirmée", "annulée").messages({
     "any.only": "Le statut doit être 'en attente', 'confirmée' ou 'annulée'",
   }),
-
-  registrationDate: Joi.date(),
 
   paymentStatus: Joi.string().valid("non payé", "payé").messages({
     "any.only": "Le statut de paiement doit être 'non payé' ou 'payé'",

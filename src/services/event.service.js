@@ -105,12 +105,24 @@ module.exports = {
 
   addParticipant: async (eventId, userId) => {
     try {
+      const event = await Event.findById(eventId);
+      if (!event) {
+        throw new Error("Événement introuvable");
+      }
+
+      // Vérifie la capacité max
+      if (event.participants.length >= event.maxParticipants) {
+        return false;
+      }
+
+      // Ajout du participant
       await Event.findByIdAndUpdate(eventId, {
         $addToSet: { participants: userId },
       });
+      return true;
     } catch (error) {
       console.error("Erreur dans addParticipant\n" + error);
-      throw error;
+      throw error.message;
     }
   },
 
