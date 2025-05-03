@@ -2,10 +2,13 @@ const express = require("express");
 const router = express.Router();
 const registrationController = require("../controllers/registration.controller");
 const tokenMdw = require("../middlewares/token.middleware");
-const adminMdw = require("../middlewares/permission.middleware");
+const {
+  adminMdw,
+  organizerMdw,
+} = require("../middlewares/permission.middleware");
 
 router.use(tokenMdw);
-router.get("/", registrationController.getRegistrations);
+router.get("/", organizerMdw, registrationController.getRegistrations);
 router.get("/:id", registrationController.getRegistration);
 router.post("/", registrationController.create);
 router.put("/:id", registrationController.update);
