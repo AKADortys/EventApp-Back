@@ -35,7 +35,6 @@ module.exports = {
       if (!result) {
         return res.status(404).json({ message: "Event inexistant" });
       }
-
       res.status(200).json(result);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -75,6 +74,14 @@ module.exports = {
       if (!event) {
         return res.status(404).json({ message: "Event inexistant" });
       }
+      const userId = new ObjectId(req.user.id);
+      const organizerId = new ObjectId(event.organizer._id);
+
+      if (!organizerId.equals(userId)) {
+        return res
+          .status(403)
+          .json({ message: "Vous n'avez pas les permissions sur cet event" });
+      }
 
       const { error, value } = updateEventSchema.validate(req.body, {
         abortEarly: false,
@@ -106,6 +113,14 @@ module.exports = {
       const event = await eventService.getEvent(id);
       if (!event) {
         return res.status(404).json({ message: "Event inexistant !" });
+      }
+      const userId = new ObjectId(req.user.id);
+      const organizerId = new ObjectId(event.organizer._id);
+
+      if (!organizerId.equals(userId)) {
+        return res
+          .status(403)
+          .json({ message: "Vous n'avez pas les permissions sur cet event" });
       }
 
       await eventService.delete(id);

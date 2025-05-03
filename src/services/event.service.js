@@ -112,7 +112,7 @@ module.exports = {
 
       // Vérifie la capacité max
       if (event.participants.length >= event.maxParticipants) {
-        return false;
+        throw new Error("Événement complet!");
       }
 
       // Ajout du participant
@@ -122,7 +122,7 @@ module.exports = {
       return true;
     } catch (error) {
       console.error("Erreur dans addParticipant\n" + error);
-      throw error.message;
+      throw error;
     }
   },
 

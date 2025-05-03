@@ -4,14 +4,14 @@ const registrationController = require("../controllers/registration.controller")
 const tokenMdw = require("../middlewares/token.middleware");
 const {
   adminMdw,
-  organizerMdw,
+  athletesMdw,
 } = require("../middlewares/permission.middleware");
 
 router.use(tokenMdw);
-router.get("/", organizerMdw, registrationController.getRegistrations);
+router.get("/", adminMdw, registrationController.getRegistrations);
 router.get("/:id", registrationController.getRegistration);
-router.post("/", registrationController.create);
-router.put("/:id", registrationController.update);
-router.delete("/:id", adminMdw, registrationController.delete);
+router.post("/", athletesMdw, registrationController.create);
+router.put("/:id", athletesMdw, registrationController.update);
+router.delete("/:id", athletesMdw, registrationController.delete);
 
 module.exports = router;
