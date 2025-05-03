@@ -1,24 +1,24 @@
+const registrationService = require("../services/registration.service");
 const {
   createRegistrationSchema,
   updateRegistrationSchema,
 } = require("../dto/registration.dto");
-const registrationService = require("../services/registration.service");
-const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
+const {
+  isValidObjectId,
+  validateSchema,
+  paginateQuery,
+  handleServerError,
+} = require("../utils/controller.helper");
 
 module.exports = {
   getRegistrations: async (req, res) => {
     try {
-      const search = req.query.search || "";
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 10;
-
+      const { search, page, limit } = paginateQuery(req.query);
       const result = await registrationService.getRegistrations(
         page,
         limit,
         search
       );
-
       res.status(200).json({
         data: result.registrations,
         page: result.page,
@@ -26,99 +26,82 @@ module.exports = {
         totalPages: result.totalPages,
       });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      handleServerError(res, error);
     }
   },
 
   getRegistration: async (req, res) => {
     try {
       const id = req.params.id;
-      if (!ObjectId.isValid(id)) {
+      if (!isValidObjectId(id))
         return res.status(400).json({ message: "ID invalide" });
-      }
 
       const result = await registrationService.getRegistration(id);
-      if (!result) {
+      if (!result)
         return res.status(404).json({ message: "Inscription inexistante" });
-      }
 
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      handleServerError(res, error);
     }
   },
 
   create: async (req, res) => {
     try {
-      const { error, value } = createRegistrationSchema.validate(req.body, {
-        abortEarly: false,
-      });
-
-      if (error) {
-        const errors = error.details.map((d) => d.message);
-        return res.status(400).json({ errors });
-      }
+      const { errors, value } = validateSchema(
+        createRegistrationSchema,
+        req.body
+      );
+      if (errors) return res.status(400).json({ errors });
 
       const registration = await registrationService.create(value);
-
-      return res.status(201).json({
-        message: "inscription créé !",
-        data: registration,
-      });
+      res
+        .status(201)
+        .json({ message: "Inscription créée !", data: registration });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      handleServerError(res, error);
     }
   },
 
   update: async (req, res) => {
     try {
       const id = req.params.id;
-      if (!ObjectId.isValid(id)) {
+      if (!isValidObjectId(id))
         return res.status(400).json({ message: "ID invalide" });
-      }
 
       const registration = await registrationService.getRegistration(id);
-      if (!registration) {
+      if (!registration)
         return res.status(404).json({ message: "Inscription inexistante" });
-      }
 
-      const { error, value } = updateRegistrationSchema.validate(req.body, {
-        abortEarly: false,
-      });
+      const { errors, value } = validateSchema(
+        updateRegistrationSchema,
+        req.body
+      );
+      if (errors) return res.status(400).json({ errors });
 
-      if (error) {
-        const errors = error.details.map((d) => d.message);
-        return res.status(400).json({ errors });
-      }
-
-      const updatedRegis = await registrationService.update(id, value);
-
-      res.status(200).json({
-        message: "Inscription modifié !",
-        data: updatedRegis,
-      });
+      const updated = await registrationService.update(id, value);
+      res
+        .status(200)
+        .json({ message: "Inscription modifiée !", data: updated });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      handleServerError(res, error);
     }
   },
 
   delete: async (req, res) => {
     try {
       const id = req.params.id;
-      if (!ObjectId.isValid(id)) {
+      if (!isValidObjectId(id))
         return res.status(400).json({ message: "ID invalide" });
-      }
 
       const registration = await registrationService.getRegistration(id);
-      if (!registration) {
-        return res.status(404).json({ message: "Inscription inexistant !" });
-      }
+      if (!registration)
+        return res.status(404).json({ message: "Inscription inexistante !" });
 
       await registrationService.delete(id);
-
-      res.status(200).json({ message: "Inscription supprimé !" });
+      res.status(200).json({ message: "Inscription supprimée !" });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      handleServerError(res, error);
     }
   },
 };
