@@ -15,7 +15,6 @@ module.exports = {
         ? {
             $or: [
               { title: { $regex: search, $options: "i" } },
-              { description: { $regex: search, $options: "i" } },
               { location: { $regex: search, $options: "i" } },
               { sportType: { $regex: search, $options: "i" } },
             ],

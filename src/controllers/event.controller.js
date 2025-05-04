@@ -34,8 +34,7 @@ module.exports = {
       const result = await eventService.getEvent(id);
       if (!result) return res.status(404).json({ message: "Event inexistant" });
 
-      // Cloner l'objet pour ne pas modifier l'original
-      let eventResponse = { ...result._doc };
+      let eventResponse = result.toObject();
 
       // Supprimer la liste des participants si l'utilisateur est un sportif
       if (req.user && req.user.role === "sportif") {
