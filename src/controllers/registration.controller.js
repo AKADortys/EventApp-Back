@@ -8,6 +8,7 @@ const {
   validateSchema,
   paginateQuery,
   handleServerError,
+  checkPermissions,
 } = require("../utils/controller.helper");
 
 module.exports = {
@@ -39,6 +40,7 @@ module.exports = {
       const result = await registrationService.getRegistration(id);
       if (!result)
         return res.status(404).json({ message: "Inscription inexistante" });
+      if (!checkPermissions(req, res, result.user._id)) return;
 
       res.status(200).json(result);
     } catch (error) {
@@ -72,6 +74,7 @@ module.exports = {
       const registration = await registrationService.getRegistration(id);
       if (!registration)
         return res.status(404).json({ message: "Inscription inexistante" });
+      if (!checkPermissions(req, res, registration.user._id)) return;
 
       const { errors, value } = validateSchema(
         updateRegistrationSchema,
@@ -97,6 +100,7 @@ module.exports = {
       const registration = await registrationService.getRegistration(id);
       if (!registration)
         return res.status(404).json({ message: "Inscription inexistante !" });
+      if (!checkPermissions(req, res, registration.user._id)) return;
 
       await registrationService.delete(id);
       res.status(200).json({ message: "Inscription supprimée !" });

@@ -1,10 +1,11 @@
 const userService = require("../services/user.service");
 const { userSchema, updateUserSchema } = require("../dto/user.dto");
 const {
-  isValidObjectId,
-  validateSchema,
   paginateQuery,
   handleServerError,
+  checkPermissions,
+  checkUserExists,
+  validateRequestSchema,
 } = require("../utils/controller.helper");
 
 const userController = {
@@ -28,16 +29,13 @@ const userController = {
   // Récupération d'un utilisateur par ID
   getUserById: async (req, res) => {
     const id = req.params.id;
-    if (!isValidObjectId(id)) {
-      return res.status(400).json({ message: "ID invalide" });
-    }
+    if (!checkPermissions(req, res, id)) return;
 
     try {
       const user = await userService.getUserById(id);
-      if (!user) {
-        return res.status(404).json({ message: "Utilisateur non trouvé" });
-      }
-      res.json(user);
+      if (!checkUserExists(res, user)) return;
+
+      res.status(200).json({ message: "Utilisateur trouvé !", data: user });
     } catch (error) {
       handleServerError(res, error);
     }
@@ -45,10 +43,8 @@ const userController = {
 
   // Création d'un utilisateur
   createUser: async (req, res) => {
-    const { errors, value } = validateSchema(userSchema, req.body);
-    if (errors) {
-      return res.status(400).json({ errors });
-    }
+    const value = validateRequestSchema(res, userSchema, req.body);
+    if (!value) return;
 
     try {
       const existingUser = await userService.getUserByMail(value.mail);
@@ -71,20 +67,14 @@ const userController = {
   // Modification d'un utilisateur
   updateUser: async (req, res) => {
     const id = req.params.id;
-    if (!isValidObjectId(id)) {
-      return res.status(400).json({ message: "ID invalide" });
-    }
+    if (!checkPermissions(req, res, id)) return;
 
     try {
       const user = await userService.getUserById(id);
-      if (!user) {
-        return res.status(404).json({ message: "Utilisateur introuvable !" });
-      }
+      if (!checkUserExists(res, user)) return;
 
-      const { errors, value } = validateSchema(updateUserSchema, req.body);
-      if (errors) {
-        return res.status(400).json({ errors });
-      }
+      const value = validateRequestSchema(res, updateUserSchema, req.body);
+      if (!value) return;
 
       const updatedUser = await userService.updateUser(id, value);
       if (!updatedUser) {
@@ -105,17 +95,16 @@ const userController = {
   // Suppression d'un utilisateur
   deleteUser: async (req, res) => {
     const id = req.params.id;
-    if (!isValidObjectId(id)) {
-      return res.status(400).json({ message: "ID invalide" });
-    }
+    if (!checkPermissions(req, res, id)) return;
 
     try {
       const user = await userService.getUserById(id);
-      if (!user) {
-        return res.status(404).json({ message: "Utilisateur introuvable" });
-      }
+      if (!checkUserExists(res, user)) return;
 
       await userService.deleteUser(id);
+      console.log(
+        `Suppression de l'utilisateur : ${user._id} par ${req.user.id}`
+      );
       res.status(200).json({ message: "Utilisateur supprimé avec succès !" });
     } catch (error) {
       handleServerError(res, error);

@@ -7,6 +7,7 @@ const {
   validateSchema,
   paginateQuery,
   handleServerError,
+  checkPermissions,
 } = require("../utils/controller.helper");
 
 module.exports = {
@@ -67,14 +68,7 @@ module.exports = {
 
       const event = await eventService.getEvent(id);
       if (!event) return res.status(404).json({ message: "Event inexistant" });
-
-      const userId = new ObjectId(req.user.id);
-      const organizerId = new ObjectId(event.organizer._id);
-      if (!organizerId.equals(userId)) {
-        return res
-          .status(403)
-          .json({ message: "Vous n'avez pas les permissions sur cet event" });
-      }
+      if (!checkPermissions(req, res, event.organizer._id)) return;
 
       const { errors, value } = validateSchema(updateEventSchema, req.body);
       if (errors) return res.status(400).json({ errors });
@@ -96,13 +90,7 @@ module.exports = {
       if (!event)
         return res.status(404).json({ message: "Event inexistant !" });
 
-      const userId = new ObjectId(req.user.id);
-      const organizerId = new ObjectId(event.organizer._id);
-      if (!organizerId.equals(userId)) {
-        return res
-          .status(403)
-          .json({ message: "Vous n'avez pas les permissions sur cet event" });
-      }
+      if (!checkPermissions(req, res, event.organizer._id)) return;
 
       await eventService.delete(id);
       res.status(200).json({ message: "Event supprimé !" });
