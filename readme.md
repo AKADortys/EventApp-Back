@@ -55,11 +55,24 @@ En fournissant une API RESTful robuste et bien documentée, ce backend constitue
     ```bash
     npm run dev
     ```
-    Ou en mode production :
-    ```bash
-    npm run start
-    ```
     L'application sera accessible par défaut à l'adresse `http://localhost:3300`.
+    ## Scripts NPM
+
+- `npm test`: Ce script standard est actuellement configuré pour afficher un message d'erreur indiquant qu'aucun test n'a été spécifié. Vous devrez mettre en place une librairie de test (comme Jest ou Mocha) et modifier ce script pour exécuter vos tests unitaires et d'intégration.
+
+- `npm run dev`: Ce script est utilisé pour lancer l'application en mode développement. Il utilise `node --watch index.js`, ce qui signifie que Node.js surveillera les changements dans le fichier `index.js` et redémarrera automatiquement le serveur en cas de modification. C'est très pratique pour un flux de développement rapide.
+
+- `npm start`: Ce script est destiné à démarrer l'application en mode production. Il exécute simplement `node index.js` sans la surveillance des fichiers, ce qui est plus performant pour un environnement de production stable.
+
+- `npm run seeding`: Ce script permet d'exécuter tous les seeders de la base de données séquentiellement. Il lance d'abord le script `seed:users`, suivi de `seed:events`, et enfin `seed:registrations`. C'est utile pour initialiser votre base de données avec des données de test ou de démonstration.
+
+- `npm run seed:users`: Ce script exécute le seeder spécifique responsable de la création et de l'insertion de données pour les utilisateurs dans la base de données. Le fichier de ce seeder est situé dans `seeders/user.seeder.js`.
+
+- `npm run seed:events`: Ce script exécute le seeder dédié à la création et à l'insertion de données pour les événements dans la base de données. Le fichier de ce seeder se trouve dans `seeders/event.seeder.js`.
+
+- `npm run seed:registrations`: Ce script exécute le seeder chargé de la création et de l'insertion de données pour les enregistrements (ou inscriptions) dans la base de données. Le fichier de ce seeder est localisé dans `seeders/registration.seeder.js`.
+
+Pour exécuter l'un de ces scripts, utilisez la commande `npm run <nom_du_script>` dans votre terminal. Par exemple, pour lancer le serveur en mode développement, vous exécuterez `npm run dev`.
 
 ## Routes de l'API
 
