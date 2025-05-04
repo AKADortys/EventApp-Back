@@ -85,7 +85,7 @@ module.exports = {
         new: true,
         runValidators: true,
       });
-      return event ? event.toObject() : null;
+      return event ? event : null;
     } catch (error) {
       console.error("Erreur event.services update()\n" + error);
       throw new Error("Erreur lors de la mise à jour de l'évenement");

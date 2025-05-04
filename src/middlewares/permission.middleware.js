@@ -20,7 +20,7 @@ const organizerMdw = async (req, res, next) => {
   try {
     const user = await verifyUserExistence(req.user.id);
 
-    if (user.role !== "organisateur") {
+    if (user.role === "sportif") {
       return res.status(403).json({
         message: "Accès réservé aux organisateurs",
       });
