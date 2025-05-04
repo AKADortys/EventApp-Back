@@ -6,7 +6,7 @@ const { adminMdw } = require("../middlewares/permission.middleware");
 
 router.post("/", userController.createUser);
 router.use(tokenMdw);
-router.get("/", adminMdw, userController.getUsers);
+router.get("/", userController.getUsers);
 router.get("/:id", userController.getUserById);
 router.put("/:id", userController.updateUser);
 router.delete("/:id", userController.deleteUser);
