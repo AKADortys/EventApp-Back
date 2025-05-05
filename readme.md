@@ -56,6 +56,7 @@ En fournissant une API RESTful robuste et bien documentée, ce backend constitue
     npm run dev
     ```
     L'application sera accessible par défaut à l'adresse `http://localhost:3300`.
+    Une documentation Swagger est disponible via `http://localhost:3300/api-docs`
     ## Scripts NPM
 
 - `npm test`: Ce script standard est actuellement configuré pour afficher un message d'erreur indiquant qu'aucun test n'a été spécifié. Vous devrez mettre en place une librairie de test (comme Jest ou Mocha) et modifier ce script pour exécuter vos tests unitaires et d'intégration.
@@ -99,6 +100,7 @@ _(Une liste détaillée des routes de l'API est disponible dans le fichier [docs
 
 - `GET /users/`
 - `GET /users/:id`
+- `GET /users/:id/registrations`
 - `POST /users/`
 - `PUT /users/:id`
 - `DELETE /users/:id`
@@ -108,7 +110,7 @@ _(Une liste détaillée des routes de l'API est disponible dans le fichier [docs
 - `POST /auth/login`
 - `POST /auth/logout`
 
-_Pour plus de détails sur les paramètres des requêtes, les corps de requête attendus et les réponses de l'API, veuillez consulter la [documentation de l'API](/docs/API.md)._
+_Pour plus de détails sur les paramètres des requêtes, les corps de requête attendus et les réponses de l'API, veuillez consulter la doc Swagger de l'API via `/api-docs`._
 
 ## Contribution
 
