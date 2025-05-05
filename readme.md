@@ -19,7 +19,7 @@ Ce backend répond aux besoins fonctionnels d'une plateforme de gestion d'évén
 - **Consulter les détails des événements :** Offrir la possibilité de voir les informations complètes d'un événement et la liste des participants inscrits.
 - **Consulter les profils utilisateurs :** Permettre la visualisation des informations des utilisateurs (selon les permissions).
 
-En fournissant une API RESTful robuste et bien documentée, ce backend constitue la pierre angulaire de l'application Angular front-end, permettant une séparation claire des responsabilités et une architecture évolutive. Il assure la persistance des données (via MongoDB), la logique métier et la sécurité de l'application.
+En fournissant une API RESTful robuste et bien documentée, ce backend constitue une base solide pour l'application Angular front-end, permettant une séparation claire des responsabilités et une architecture évolutive. Il assure la persistance des données (via MongoDB), la logique métier et la sécurité de l'application.
 
 ## Prérequis
 
@@ -52,11 +52,14 @@ En fournissant une API RESTful robuste et bien documentée, ce backend constitue
 
 4.  **Démarrage de l'Application :**
     Vous pouvez démarrer l'application en mode développement (avec redémarrage automatique) :
+
     ```bash
     npm run dev
     ```
+
     L'application sera accessible par défaut à l'adresse `http://localhost:3300`.
     Une documentation Swagger est disponible via `http://localhost:3300/api-docs`
+
     ## Scripts NPM
 
 - `npm test`: Ce script standard est actuellement configuré pour afficher un message d'erreur indiquant qu'aucun test n'a été spécifié. Vous devrez mettre en place une librairie de test (comme Jest ou Mocha) et modifier ce script pour exécuter vos tests unitaires et d'intégration.
