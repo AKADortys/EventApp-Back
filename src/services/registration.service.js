@@ -46,6 +46,7 @@ module.exports = {
       throw new Error("Erreur lors de la récupération de l'event");
     }
   },
+
   getRegistrationByUser: async (userId, page, limit, search) => {
     try {
       const {
@@ -77,6 +78,41 @@ module.exports = {
       );
       throw new Error(
         "Erreur lors de la récupération des inscriptions de l'utilisateur"
+      );
+    }
+  },
+
+  getRegistrationByEvent: async (eventId, page, limit, search) => {
+    try {
+      const {
+        skip,
+        limit: parsedLimit,
+        page: parsedPage,
+      } = getPagination(page, limit);
+      const searchQuery = getSearchQuery(search, ["status", "paymentStatus"]);
+      const filter = { event: eventId, ...searchQuery };
+
+      const [registrations, total] = await Promise.all([
+        Registration.find(filter)
+          .skip(skip)
+          .limit(parsedLimit)
+          .populate("event", "title date location sportType")
+          .populate("user", "name lastName mail"),
+        Registration.countDocuments(filter),
+      ]);
+
+      return {
+        registrations,
+        total,
+        totalPages: Math.ceil(total / parsedLimit),
+        page: parsedPage,
+      };
+    } catch (error) {
+      console.error(
+        "Erreur registration.service getRegistrationByEvent()\n" + error
+      );
+      throw new Error(
+        "Erreur lors de la récupération des inscriptions de l'événement"
       );
     }
   },

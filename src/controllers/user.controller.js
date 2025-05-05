@@ -1,4 +1,5 @@
 const userService = require("../services/user.service");
+const registrationService = require("../services/registration.service");
 const { userSchema, updateUserSchema } = require("../dto/user.dto");
 const {
   paginateQuery,
@@ -36,6 +37,28 @@ const userController = {
       if (!checkUserExists(res, user)) return;
 
       res.status(200).json({ message: "Utilisateur trouvé !", data: user });
+    } catch (error) {
+      handleServerError(res, error);
+    }
+  },
+
+  getUserRegistrations: async (req, res) => {
+    try {
+      const id = req.params.id;
+      if (!checkPermissions(req, res, id)) return;
+      const { search, page, limit } = paginateQuery(req.query);
+      const result = await registrationService.getRegistrationByUser(
+        id,
+        page,
+        limit,
+        search
+      );
+      res.status(200).json({
+        data: result.registrations,
+        page: result.page,
+        totalPages: result.totalPages,
+        total: result.total,
+      });
     } catch (error) {
       handleServerError(res, error);
     }
