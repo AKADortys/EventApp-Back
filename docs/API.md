@@ -10,17 +10,18 @@ Cette API RESTful permet de gérer les inscriptions, les événements et les uti
 - **`PUT /registrations/:id`** : Met à jour une inscription existante par son ID. Le corps de la requête doit contenir les champs à modifier.
 - **`DELETE /registrations/:id`** : Supprime une inscription spécifique par son ID.
 
-_(Une documentation des schémas de validation (dto) pour connaître la structure exacte du corps de la requête attendu est disponible dans le fichier [/dto/registration.dto.md](./dto/registration.dto.md) ou ci-dessous)_
+_(Une documentation des schémas de validation (dto) pour connaître la structure exacte du corps de la requête attendu est disponible dans le fichier [/dto/registration.dto.md](./dto/registration.dto.md))_
 
 ### Événements (`/events`)
 
 - **`GET /events/`** : Récupère la liste de tous les événements avec pagination `(page : number, limit : number)`.
 - **`GET /events/:id`** : Récupère un événement spécifique par son ID.
+- **`GET /events/:id/registrations`**: Récupère les inscriptions à un événement par l'ID de ce dernier avec pagination `(page : number, limit : number)`
 - **`POST /events/`** : Crée un nouvel événement. Le corps de la requête doit contenir les informations nécessaires (titre, description, date, lieu, type de sport, nombre maximum de participants, organisateur).
 - **`PUT /events/:id`** : Met à jour un événement existant par son ID. Le corps de la requête doit contenir les champs à modifier.
 - **`DELETE /events/:id`** : Supprime un événement spécifique par son ID.
 
-_(Une documentation des schémas de validation (dto) pour connaître la structure exacte du corps de la requête attendu est disponible dans le fichier [/dto/event.dto.md](./dto/event.dto.md) ou ci-dessous)_
+_(Une documentation des schémas de validation (dto) pour connaître la structure exacte du corps de la requête attendu est disponible dans le fichier [/dto/event.dto.md](./dto/event.dto.md))_
 
 ### Utilisateurs (`/users`)
 
@@ -30,7 +31,7 @@ _(Une documentation des schémas de validation (dto) pour connaître la structur
 - **`PUT /users/:id`** : Met à jour un utilisateur existant par son ID. Le corps de la requête doit contenir les champs à modifier.
 - **`DELETE /users/:id`** : Supprime un utilisateur spécifique par son ID.
 
-_(Une documentation des schémas de validation (dto) pour connaître la structure exacte du corps de la requête attendu est disponible dans le fichier [/dto/user.dto.md](./dto/user.dto.md) ou ci-dessous)_
+_(Une documentation des schémas de validation (dto) pour connaître la structure exacte du corps de la requête attendu est disponible dans le fichier [/dto/user.dto.md](./dto/user.dto.md))_
 
 ### Authentification (`/auth`)
 

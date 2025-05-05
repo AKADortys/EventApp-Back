@@ -90,6 +90,7 @@ _(Une liste détaillée des routes de l'API est disponible dans le fichier [docs
 
 - `GET /events/`
 - `GET /events/:id`
+- `GET /events/:id/registrations`
 - `POST /events/`
 - `PUT /events/:id`
 - `DELETE /events/:id`
