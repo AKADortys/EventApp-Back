@@ -1,34 +1,32 @@
 const User = require("../models/User");
+const { getPagination, getSearchQuery } = require("../utils/service.helper");
 module.exports = {
   // Récupérer tous les utilisateurs
   getUsers: async (page, limit, searchTerm = "") => {
     try {
-      const skip = (page - 1) * limit;
-
-      // Construction de la condition de recherche
-      const searchQuery = searchTerm
-        ? {
-            $or: [
-              { name: { $regex: searchTerm, $options: "i" } },
-              { lastName: { $regex: searchTerm, $options: "i" } },
-              { mail: { $regex: searchTerm, $options: "i" } },
-              { phone: { $regex: searchTerm } },
-              { role: { $regex: searchTerm, $options: "i" } },
-            ],
-          }
-        : {};
+      const {
+        skip,
+        page: parsedPage,
+        limit: parsedLimit,
+      } = getPagination(page, limit);
+      const searchQuery = getSearchQuery(searchTerm, [
+        "name",
+        "lastName",
+        "mail",
+        "phone",
+      ]);
 
       // Requête avec filtre + pagination
       const [users, total] = await Promise.all([
-        User.find(searchQuery).skip(skip).limit(limit),
+        User.find(searchQuery).skip(skip).limit(parsedLimit),
         User.countDocuments(searchQuery),
       ]);
 
       return {
         users,
         total,
-        totalPages: Math.ceil(total / limit),
-        page,
+        totalPages: Math.ceil(total / parsedLimit),
+        page: parsedPage,
       };
     } catch (error) {
       throw new Error("Erreur lors de la récupération des utilisateurs");

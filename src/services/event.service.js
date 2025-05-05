@@ -1,30 +1,26 @@
 const Event = require("../models/Event");
 const validator = require("validator");
+const { getPagination, getSearchQuery } = require("../utils/service.helper");
 
 module.exports = {
   getEvents: async (page, limit, search) => {
     try {
-      const skip = (page - 1) * limit;
-      if (search && !validator.isLength(search, { min: 3, max: 30 })) {
-        throw new Error(
-          "La recherche est invalide (doit faire entre 3 et 30 caractères)"
-        );
-      }
-      // Construction de la condition de recherche
-      const searchQuery = search
-        ? {
-            $or: [
-              { title: { $regex: search, $options: "i" } },
-              { location: { $regex: search, $options: "i" } },
-              { sportType: { $regex: search, $options: "i" } },
-            ],
-          }
-        : {};
+      const {
+        skip,
+        page: parsedPage,
+        limit: parsedLimit,
+      } = getPagination(page, limit);
+      const searchQuery = getSearchQuery(search, [
+        "title",
+        "location",
+        "sportType",
+      ]);
+
       // Requête avec filtre + pagination
       const [events, total] = await Promise.all([
         Event.find(searchQuery)
           .skip(skip)
-          .limit(limit)
+          .limit(parsedLimit)
           .populate("organizer", "name lastName mail")
           .populate("participants", "name lastName mail"),
         Event.countDocuments(searchQuery),
@@ -32,8 +28,8 @@ module.exports = {
       return {
         events,
         total,
-        totalPages: Math.ceil(total / limit),
-        page,
+        totalPages: Math.ceil(total / parsedLimit),
+        page: parsedPage,
       };
     } catch (error) {
       console.error("Erreur event.services getEvents()\n" + error);

@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
 const eventService = require("../services/event.service");
+const registrationService = require("../services/registration.service");
 const { createEventSchema, updateEventSchema } = require("../dto/event.dto");
 const {
   isValidObjectId,
@@ -17,6 +16,32 @@ module.exports = {
       const result = await eventService.getEvents(page, limit, search);
       res.status(200).json({
         data: result.events,
+        page: result.page,
+        total: result.total,
+        totalPages: result.totalPages,
+      });
+    } catch (error) {
+      handleServerError(res, error);
+    }
+  },
+  getRegistrationByEvent: async (req, res) => {
+    const id = req.params.id;
+    if (!isValidObjectId(id))
+      return res.status(400).json({ message: "ID invalide" });
+
+    const event = await eventService.getEvent(id);
+    if (!event) return res.status(404).json({ message: "Event inexistant" });
+    if (!checkPermissions(req, res, event.organizer._id)) return;
+    try {
+      const { search, page, limit } = paginateQuery(req.query);
+      const result = await registrationService.getRegistrationByEvent(
+        id,
+        page,
+        limit,
+        search
+      );
+      res.status(200).json({
+        data: result.registrations,
         page: result.page,
         total: result.total,
         totalPages: result.totalPages,

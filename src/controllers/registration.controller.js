@@ -22,7 +22,7 @@ module.exports = {
       );
       res.status(200).json({
         data: result.registrations,
-        page: result.page,
+        page: result.parsedPage,
         total: result.total,
         totalPages: result.totalPages,
       });

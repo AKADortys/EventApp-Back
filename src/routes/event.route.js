@@ -7,8 +7,10 @@ const { organizerMdw } = require("../middlewares/permission.middleware");
 router.use(tokenMdw);
 router.get("/", eventController.getEvents);
 router.get("/:id", eventController.getEvent);
-router.post("/", organizerMdw, eventController.create);
-router.put("/:id", organizerMdw, eventController.update);
-router.delete("/:id", organizerMdw, eventController.delete);
+router.use(organizerMdw);
+router.get("/:id/registrations", eventController.getRegistrationByEvent);
+router.post("/", eventController.create);
+router.put("/:id", eventController.update);
+router.delete("/:id", eventController.delete);
 
 module.exports = router;

@@ -1,29 +1,21 @@
 const Registration = require("../models/Registration");
-const validator = require("validator");
 const eventService = require("./event.service");
+const { getPagination, getSearchQuery } = require("../utils/service.helper");
 
 module.exports = {
   getRegistrations: async (page, limit, search) => {
     try {
-      const skip = (page - 1) * limit;
-      if (search && !validator.isLength(search, { min: 3, max: 30 })) {
-        throw new Error(
-          "La recherche est invalide (doit faire entre 3 et 30 caractères)"
-        );
-      }
-      const searchQuery = search
-        ? {
-            $or: [
-              { status: { $regex: search, $options: "i" } },
-              { paymentStatus: { $regex: search, $options: "i" } },
-            ],
-          }
-        : {};
+      const {
+        skip,
+        limit: parsedLimit,
+        page: parsedPage,
+      } = getPagination(page, limit);
+      const searchQuery = getSearchQuery(search, ["status", "paymentStatus"]);
       // Requête avec filtre + pagination
       const [registrations, total] = await Promise.all([
         Registration.find(searchQuery)
           .skip(skip)
-          .limit(limit)
+          .limit(parsedLimit)
           .populate("event", "title date location sportType")
           .populate("user", "name lastName mail"),
         Registration.countDocuments(searchQuery),
@@ -31,8 +23,8 @@ module.exports = {
       return {
         registrations,
         total,
-        totalPages: Math.ceil(total / limit),
-        page,
+        totalPages: Math.ceil(total / parsedLimit),
+        parsedPage,
       };
     } catch (error) {
       console.error(
@@ -54,16 +46,34 @@ module.exports = {
       throw new Error("Erreur lors de la récupération de l'event");
     }
   },
-
-  getRegistrationByUser: async (id) => {
+  getRegistrationByUser: async (userId, page, limit, search) => {
     try {
-      const registration = await Registration.find({ user: id })
-        .populate("event", "title date location sportType")
-        .populate("user", "name lastName mail");
-      return registration || null;
+      const {
+        skip,
+        limit: parsedLimit,
+        page: parsedPage,
+      } = getPagination(page, limit);
+      const searchQuery = getSearchQuery(search, ["status", "paymentStatus"]);
+      const filter = { user: userId, ...searchQuery };
+
+      const [registrations, total] = await Promise.all([
+        Registration.find(filter)
+          .skip(skip)
+          .limit(parsedLimit)
+          .populate("event", "title date location sportType")
+          .populate("user", "name lastName mail"),
+        Registration.countDocuments(filter),
+      ]);
+
+      return {
+        registrations,
+        total,
+        totalPages: Math.ceil(total / parsedLimit),
+        page: parsedPage,
+      };
     } catch (error) {
       console.error(
-        "Erreur registration.service getregistrationByUser()\n" + error
+        "Erreur registration.service getRegistrationByUser()\n" + error
       );
       throw new Error(
         "Erreur lors de la récupération des inscriptions de l'utilisateur"
