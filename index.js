@@ -8,8 +8,13 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./src/config/swagger");
 
 connect(); //connection à la bdd
-app.use(cookieParser()); //utilisation de la config de cookie parser poour les cookies
-app.use(cors()); //les domaines autorisé à définir
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  })
+);
 app.use(express.json()); //middleware pour les réponse et requêtes
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

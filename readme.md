@@ -113,7 +113,7 @@ _(Une liste détaillée des routes de l'API est disponible dans le fichier [docs
 - `POST /auth/login`
 - `POST /auth/logout`
 
-_Pour plus de détails sur les paramètres des requêtes, les corps de requête attendus et les réponses de l'API, veuillez consulter la doc Swagger de l'API via `/api-docs`._
+_Pour plus de détails sur les paramètres des requêtes, les corps de requête attendus et les réponses de l'API, veuillez consulter la doc Swagger de l'API via `https://eventapp-back-l294.onrender.com/api-docs/`._
 
 ## Contribution
 
