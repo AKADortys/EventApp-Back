@@ -1,7 +1,7 @@
 const swaggerJSDoc = require("swagger-jsdoc");
 const eventSchema = require("./swaggerschema/event.schema");
 const registrationSchema = require("./swaggerschema/registration.schema");
-const userSchema = require("./swaggerschema/user.schema");
+const { inputUser, outputUser } = require("./swaggerschema/user.schema");
 
 const options = {
   definition: {
@@ -21,7 +21,8 @@ const options = {
       schemas: {
         Event: eventSchema,
         Registration: registrationSchema,
-        User: userSchema,
+        User: outputUser,
+        inputUser: inputUser,
       },
     },
   },

@@ -155,7 +155,7 @@ module.exports = router;
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/inputUser'
  *     responses:
  *       201:
  *         description: Utilisateur créé avec succès
