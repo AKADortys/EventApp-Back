@@ -51,6 +51,31 @@ module.exports = {
     }
   },
 
+  gerEventByOrga: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const { search, page, limit } = paginateQuery(req.query);
+
+      if (!isValidObjectId(id))
+        return res.status(400).json({ message: "ID invalide" });
+
+      const result = await eventService.getEventsByOrga(
+        id,
+        page,
+        limit,
+        search
+      );
+      res.status(200).json({
+        data: result.events,
+        page: result.page,
+        total: result.total,
+        totalPages: result.totalPages,
+      });
+    } catch (error) {
+      handleServerError(res, error);
+    }
+  },
+
   getEvent: async (req, res) => {
     try {
       const id = req.params.id;
@@ -61,11 +86,6 @@ module.exports = {
       if (!result) return res.status(404).json({ message: "Event inexistant" });
 
       let eventResponse = result.toObject();
-
-      // Supprimer la liste des participants si l'utilisateur est un sportif
-      if (req.user && req.user.role === "sportif") {
-        delete eventResponse.participants;
-      }
 
       res.status(200).json(eventResponse);
     } catch (error) {

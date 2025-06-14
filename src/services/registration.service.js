@@ -155,6 +155,20 @@ module.exports = {
     }
   },
 
+  findRegistration: async (userId, eventId) => {
+    try {
+      const registration = await Registration.findOne({
+        event: eventId,
+        user: userId,
+      });
+      if (!registration) throw new Error("Inscription inexistante !");
+      return registration;
+    } catch (error) {
+      console.error("Erreur registration.service findRegistration()\n" + error);
+      throw new Error("Erreur lors de la récupération de l'inscription");
+    }
+  },
+
   checkExist: async (userId, eventId) => {
     try {
       const registration = await Registration.findOne({

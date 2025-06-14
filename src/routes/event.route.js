@@ -9,6 +9,7 @@ router.get("/", eventController.getEvents);
 router.get("/:id", eventController.getEvent);
 router.use(organizerMdw);
 router.get("/:id/registrations", eventController.getRegistrationByEvent);
+router.get("/:id/organizer", eventController.gerEventByOrga);
 router.post("/", eventController.create);
 router.put("/:id", eventController.update);
 router.delete("/:id", eventController.delete);

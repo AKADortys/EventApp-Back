@@ -30,8 +30,6 @@ const userController = {
   // Récupération d'un utilisateur par ID
   getUserById: async (req, res) => {
     const id = req.params.id;
-    if (!checkPermissions(req, res, id)) return;
-
     try {
       const user = await userService.getUserById(id);
       if (!checkUserExists(res, user)) return;
@@ -80,7 +78,7 @@ const userController = {
 
       res.status(201).json({
         message: "Utilisateur créé avec succès",
-        user: sanitizedUser,
+        data: sanitizedUser,
       });
     } catch (error) {
       handleServerError(res, error);

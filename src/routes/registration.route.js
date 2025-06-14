@@ -10,6 +10,7 @@ const {
 router.use(tokenMdw);
 router.get("/", adminMdw, registrationController.getRegistrations);
 router.use(athletesMdw);
+router.post("/findOne", registrationController.findRegistration);
 router.get("/:id", registrationController.getRegistration);
 router.post("/", registrationController.create);
 router.put("/:id", registrationController.update);

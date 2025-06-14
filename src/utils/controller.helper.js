@@ -38,7 +38,7 @@ function checkPermissions(req, res, targetUserId) {
     return false;
   }
 
-  console.log(req.user.id + "\n" + targetUserId);
+  // console.log(req.user.id + "\n" + targetUserId);
 
   if (
     String(req.user.id) !== String(targetUserId) &&

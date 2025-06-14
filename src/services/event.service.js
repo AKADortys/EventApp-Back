@@ -50,12 +50,33 @@ module.exports = {
     }
   },
 
-  getEventsByOrga: async (idOrga) => {
+  getEventsByOrga: async (idOrga, page, limit, search) => {
     try {
-      const event = await Event.find({ organizer: idOrga })
-        .populate("organizer", "name lastName mail")
-        .populate("participants", "name lastName mail");
-      return event || null;
+      const {
+        skip,
+        page: parsedPage,
+        limit: parsedLimit,
+      } = getPagination(page, limit);
+      const searchQuery = getSearchQuery(search, [
+        "title",
+        "location",
+        "sportType",
+      ]);
+
+      const [events, total] = await Promise.all([
+        Event.find({ organizer: idOrga }, searchQuery)
+          .skip(skip)
+          .limit(parsedLimit)
+          .populate("organizer", "name lastName mail")
+          .populate("participants", "name lastName mail"),
+        Event.countDocuments({ organizer: idOrga }, searchQuery),
+      ]);
+      return {
+        events,
+        total,
+        totalPages: Math.ceil(total / parsedLimit),
+        page: parsedPage,
+      };
     } catch (error) {
       console.error("Erreur event.service getEventsByOrga()\n" + error);
       throw new Error(

@@ -48,6 +48,25 @@ module.exports = {
     }
   },
 
+  findRegistration: async (req, res) => {
+    try {
+      const { userId, eventId } = req.body;
+      if (!userId || !eventId)
+        return res
+          .status(400)
+          .json({ message: "userId et ou eventId manquant dans le body" });
+      const registration = await registrationService.findRegistration(
+        userId,
+        eventId
+      );
+      res
+        .status(200)
+        .json({ message: "Inscription trouvée !", data: registration });
+    } catch (error) {
+      handleServerError(res, error);
+    }
+  },
+
   create: async (req, res) => {
     try {
       const { errors, value } = validateSchema(
