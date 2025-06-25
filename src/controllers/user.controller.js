@@ -7,6 +7,7 @@ const {
   checkPermissions,
   checkUserExists,
   validateRequestSchema,
+  isValidObjectId,
 } = require("../utils/controller.helper");
 
 const userController = {
@@ -30,6 +31,8 @@ const userController = {
   // Récupération d'un utilisateur par ID
   getUserById: async (req, res) => {
     const id = req.params.id;
+    if (!isValidObjectId(id))
+      return res.status(400).json({ message: "ID invalide" });
     try {
       const user = await userService.getUserById(id);
       if (!checkUserExists(res, user)) return;
@@ -43,6 +46,8 @@ const userController = {
   getUserRegistrations: async (req, res) => {
     try {
       const id = req.params.id;
+      if (!isValidObjectId(id))
+        return res.status(400).json({ message: "ID invalide" });
       if (!checkPermissions(req, res, id)) return;
       const { search, page, limit } = paginateQuery(req.query);
       const result = await registrationService.getRegistrationByUser(
@@ -88,6 +93,8 @@ const userController = {
   // Modification d'un utilisateur
   updateUser: async (req, res) => {
     const id = req.params.id;
+    if (!isValidObjectId(id))
+      return res.status(400).json({ message: "ID invalide" });
     if (!checkPermissions(req, res, id)) return;
 
     try {
@@ -116,6 +123,8 @@ const userController = {
   // Suppression d'un utilisateur
   deleteUser: async (req, res) => {
     const id = req.params.id;
+    if (!isValidObjectId(id))
+      return res.status(400).json({ message: "ID invalide" });
     if (!checkPermissions(req, res, id)) return;
 
     try {
