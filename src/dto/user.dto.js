@@ -27,6 +27,19 @@ const userSchema = Joi.object({
         "Le nom de famille ne doit contenir que des lettres, espaces et tirets.",
       "any.required": "Le nom de famille est requis.",
     }),
+  gender: Joi.string().valid("homme", "femme", "autres").messages({
+    "any.only": "Le genre doit être 'homme', 'femme', 'autres'. ",
+  }),
+  birthday: Joi.date()
+    .less("now")
+    .max(new Date(new Date().setFullYear(new Date().getFullYear() - 18)))
+    .required()
+    .messages({
+      "date.base": "La date de naissance doit être une date valide",
+      "date.less": "La date de naissance doit être antérieure à aujourd'hui",
+      "date.max": "Vous devez avoir au moins 18 ans",
+      "any.required": "La date de naissance est requise",
+    }),
   phone: Joi.string()
     .regex(/^(?:\+33|0)[67]\d{8}$/)
     .required()
@@ -76,6 +89,18 @@ const updateUserSchema = Joi.object({
       "string.max": "Le nom de famille doit contenir au maximum 50 caractères.",
       "string.pattern.base":
         "Le nom de famille ne doit contenir que des lettres, espaces et tirets.",
+    }),
+  gender: Joi.string().valid("homme", "femme", "autres").messages({
+    "any.only": "Le genre doit être 'homme', 'femme', 'autres'. ",
+  }),
+  birthday: Joi.date()
+    .less("now")
+    .max(new Date(new Date().setFullYear(new Date().getFullYear() - 18)))
+    .messages({
+      "date.base": "La date de naissance doit être une date valide",
+      "date.less": "La date de naissance doit être antérieure à aujourd'hui",
+      "date.max": "Vous devez avoir au moins 18 ans",
+      "any.required": "La date de naissance est requise",
     }),
   phone: Joi.string()
     .regex(/^(?:\+33|0)[67]\d{8}$/)

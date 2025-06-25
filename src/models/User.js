@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const { required } = require("joi");
 
 const userSchema = new mongoose.Schema(
   {
@@ -17,6 +18,28 @@ const userSchema = new mongoose.Schema(
       minlength: [2, "Le nom de famille doit avoir au moins 2 caractères"],
       maxlength: [50, "Le nom de famille ne doit pas dépasser 50 caractères"],
       trim: true,
+    },
+    gender: {
+      type: String,
+      required: [true, "Le genre est requis"],
+      enum: ["homme", "femme", "autres"],
+      default: "autres",
+    },
+    birthday: {
+      type: Date,
+      required: [true, "La date de naissance est requise"],
+      validate: {
+        validator: function (date) {
+          const today = new Date();
+          const minDate = new Date(
+            today.getFullYear() - 18,
+            today.getMonth(),
+            today.getDate()
+          );
+          return date <= minDate;
+        },
+        message: "Vous devez avoir au moins 18 ans",
+      },
     },
     mail: {
       type: String,

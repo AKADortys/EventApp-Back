@@ -13,6 +13,15 @@ const outputUser = {
       type: "string",
       description: "Nom de famille de l'utilisateur",
     },
+    gender: {
+      type: "string",
+      description: "Le genre de l'utilisateur",
+    },
+    birthday: {
+      type: "string",
+      format: "date-time",
+      description: "La date de naissance de l'utilisateur",
+    },
     phone: {
       type: "string",
       description: "Numéro de téléphone format FR ex. 06******** 07********",
@@ -38,6 +47,15 @@ const inputUser = {
     lastName: {
       type: "string",
       description: "Nom de famille de l'utilisateur",
+    },
+    gender: {
+      type: "string",
+      description: "Le genre de l'utilisateur",
+    },
+    birthday: {
+      type: "string",
+      format: "date-time",
+      description: "La date de naissance de l'utilisateur",
     },
     password: {
       type: "string",

@@ -41,7 +41,7 @@ module.exports = {
     try {
       const event = await Event.findById(id)
         .populate("organizer", "name lastName mail")
-        .populate("participants", "name lastName mail");
+        .populate("participants", "name lastName gender");
 
       return event || null;
     } catch (error) {

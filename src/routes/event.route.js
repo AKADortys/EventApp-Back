@@ -4,9 +4,9 @@ const eventController = require("../controllers/event.controller");
 const tokenMdw = require("../middlewares/token.middleware");
 const { organizerMdw } = require("../middlewares/permission.middleware");
 
-router.use(tokenMdw);
 router.get("/", eventController.getEvents);
 router.get("/:id", eventController.getEvent);
+router.use(tokenMdw);
 router.use(organizerMdw);
 router.get("/:id/registrations", eventController.getRegistrationByEvent);
 router.get("/:id/organizer", eventController.gerEventByOrga);
