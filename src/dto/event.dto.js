@@ -30,6 +30,10 @@ const createEventSchema = Joi.object({
     "any.required": "Le lieu de l'événement est requis",
   }),
 
+  imageUrl: Joi.string().uri().allow("").messages({
+    "string.uri": "L'URL de l'image n'est pas valide",
+  }),
+
   sportType: Joi.string()
     .valid(
       "football",
@@ -97,6 +101,9 @@ const updateEventSchema = Joi.object({
     "rugby",
     "autre"
   ),
+  imageUrl: Joi.string().uri().allow("").messages({
+    "string.uri": "L'URL de l'image n'est pas valide",
+  }),
   maxParticipants: Joi.number().integer().min(1),
   organizer: Joi.string().custom((value, helpers) => {
     if (!ObjectId.isValid(value)) {

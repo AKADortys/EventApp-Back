@@ -28,6 +28,10 @@ const eventSchema = new mongoose.Schema(
       required: [true, "Le lieu de l'événement est requis"],
       trim: true,
     },
+    imageUrl: {
+      type: String,
+      trim: true,
+    },
     sportType: {
       type: String,
       required: [true, "Le type de sport est requis"],
