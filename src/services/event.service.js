@@ -10,11 +10,14 @@ module.exports = {
         page: parsedPage,
         limit: parsedLimit,
       } = getPagination(page, limit);
+
       const searchQuery = getSearchQuery(search, [
         "title",
         "location",
         "sportType",
       ]);
+
+      searchQuery.date = { $gte: new Date() };
 
       // Requête avec filtre + pagination
       const [events, total] = await Promise.all([
