@@ -19,6 +19,7 @@ module.exports = {
       // Requête avec filtre + pagination
       const [events, total] = await Promise.all([
         Event.find(searchQuery)
+          .sort({ date: 1 })
           .skip(skip)
           .limit(parsedLimit)
           .populate("organizer", "name lastName mail")
@@ -65,6 +66,7 @@ module.exports = {
 
       const [events, total] = await Promise.all([
         Event.find({ organizer: idOrga }, searchQuery)
+          .sort({ date: 1 })
           .skip(skip)
           .limit(parsedLimit)
           .populate("organizer", "name lastName mail")
